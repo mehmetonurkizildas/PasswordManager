@@ -1,0 +1,98 @@
+﻿@model List<CategoryListDto>
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800"></h1>
+    <a href="/Admin/CategoryModify" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-arrow-down fa-sm text-white-50"></i> Yeni Kayıt Ekle</a>
+</div>
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Kategorilerim</h6>
+    </div>
+    <div class="card-body" style="font-size:15px;">
+        <div class="table-responsive">
+
+            @if (ViewBag.Message != null)
+            {
+                <a href="#" class="btn btn-info btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                    <span class="text">@ViewBag.Message</span>
+                </a>
+                <br />
+                <br />
+            }
+
+
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Başlık</th>
+                        <th>Kayıtlı Şifre</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Name</td>
+                                <td>@item.PasswordCount</td>
+                                <td>
+
+                                    <a href="/Admin/CategoryModify/@item.Id" class="btn btn-success btn-circle btn-sm" title="Düzenle">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <a href="#" onclick="DeleteCategory(this)" data-id="@item.Id" data-name="@item.Name" class="btn btn-danger btn-circle btn-sm" title="Sil">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/demo/datatables-demo.js"></script>
+
+    <script>
+        function DeleteCategory(elem) {
+            var categoryId = $(elem).data("id");
+            var categoryName = $(elem).data("name");
+            Swal.fire({
+                html: "<b><u>" + categoryName + "</u></b> Kategorisi Silinecek Onaylıyor Musunuz ?",
+                showCancelButton: true,
+                confirmButtonText: "Sil",
+                cancelButtonText: "İptal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "/Admin/DeleteCategory/" + categoryId,
+                        success: function () {
+                            Swal.fire("İşlem başarılı şekilde gerçekleşmiştir!", "", "success");
+                            location.reload();
+                        },
+                    });
+                }
+            });
+        }
+    </script>
+}

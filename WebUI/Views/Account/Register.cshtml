@@ -1,0 +1,113 @@
+﻿@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout_Account.cshtml";
+}
+@model UserRegisterRequestDto
+
+
+<div class="card o-hidden border-0 shadow-lg my-5">
+    <div class="card-body p-0">
+        <!-- Nested Row within Card Body -->
+        <div class="row">
+            <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+            <div class="col-lg-7">
+                <div class="p-5">
+                    <div class="text-center">
+                        <h1 class="h4 text-gray-900 mb-4">Hesap Oluştur !</h1>
+
+                        @if (ViewBag.ErrorMessage != null)
+                        {
+                            <a href="#" class="btn btn-danger btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                                <span class="text">@ViewBag.ErrorMessage</span>
+                            </a>
+                            <br />
+                            <br />
+                        }
+
+                    </div>
+                    <form method="post" asp-controller="Account" asp-action="Register" autocomplete="off" id="RegisterForm">
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <input type="text" class="form-control form-control-user" id="exampleFirstName"
+                                       placeholder="Adınız" asp-for="FirstName">
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-user" id="exampleLastName"
+                                       placeholder="Soyadınız" asp-for="LastName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                                   placeholder="E-Posta Adresiniz " asp-for="Email">
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <input type="password" class="form-control form-control-user"
+                                       id="exampleInputPassword" placeholder="Password" asp-for="Password">
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="password" class="form-control form-control-user"
+                                       id="exampleRepeatPassword" placeholder="Repeat Password" asp-for="ConfirmPassword">
+                            </div>
+                        </div>
+                        <button action="submit" class="btn btn-primary btn-user btn-block" id="btnRegister">
+                            Kayıt Ol
+                        </button>
+                    </form>
+                    <hr>
+                    <div id="error" style="color: red;"></div>
+                    <div class="text-center">
+                        <a class="small" href="/Account/Login">Hesabınız var mı ? Giriş Yap!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script>
+        $("#exampleInputPassword, #exampleRepeatPassword").on("change", function () {
+            var password1 = $("#exampleInputPassword").val();
+            var password2 = $("#exampleRepeatPassword").val();
+
+
+            var message = "";
+
+            if (password1 !== password2) {
+                message = "Şifreler uyuşmuyor.";
+            }
+            else if (!(/^(.{8,20}$)/.test(password1))) {
+                message = "Şifre 8 ila 20 karakter uzunluğunda olmalıdır.";
+            }
+            else if (!(/^(?=.*[A-Z])/.test(password1))) {
+                message = "Şifre en az bir büyük harf içermelidir.";
+            }
+            else if (!(/^(?=.*[a-z])/.test(password1))) {
+                message = "Şifre en az bir küçük harf içermelidir";
+            }
+            else if (!(/^(?=.*[0-9])/.test(password1))) {
+                message = "Şifre en az bir küçük harf içermelidir.";
+            }
+            else if (!(/^(?=.*[@@#$%&])/.test(password1))) {
+                message = "Şifre @@#$%&'den özel karakterler içermelidir.";
+            }
+            else {
+                message = "";
+            }
+
+            if (message != "") {
+                $("#btnRegister").prop("disabled", true);
+            }
+            else {
+                $("#btnRegister").prop("disabled", false);
+            }
+            $("#error").text(message);
+
+        });
+    </script>
+}
